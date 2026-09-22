@@ -1,0 +1,148 @@
+/* ─── НЕОН-КИТЕЖ :: база, темы, CRT ──────────────────────────────────────── */
+
+:root {
+  --neon:    #ff2ea6;
+  --cyan:    #7cf7ff;
+  --acid:    #39ff88;
+  --amber:   #ffb703;
+  --blood:   #ff4d6d;
+  --violet:  #c77dff;
+
+  --bg0: #06030d;
+  --bg1: #0b0616;
+  --bg2: #120a22;
+  --bg3: #1b1033;
+  --line: rgba(124, 247, 255, .18);
+  --line-hot: rgba(255, 46, 166, .45);
+  --ink: #d9e6ff;
+  --ink-dim: #8a93b8;
+  --accent: var(--neon);
+  --accent2: var(--cyan);
+  --glow: 0 0 6px currentColor, 0 0 22px rgba(255, 46, 166, .45);
+
+  --mono: 'Share Tech Mono', 'IBM Plex Mono', 'Consolas', 'DejaVu Sans Mono', monospace;
+  --disp: 'Orbitron', 'Share Tech Mono', var(--mono);
+
+  --r: 2px;
+  --sbw: 268px;
+}
+
+/* ── ТЕМЫ ────────────────────────────────────────────────────────────────── */
+[data-theme='amber'] {
+  --neon: #ffae00; --cyan: #ffd166; --acid: #ffe08a; --accent: #ffae00; --accent2: #ffd166;
+  --bg0: #0a0600; --bg1: #130c01; --bg2: #1b1203; --bg3: #251905;
+  --ink: #ffd9a0; --ink-dim: #b08543;
+  --line: rgba(255, 174, 0, .2); --line-hot: rgba(255, 224, 138, .45);
+  --glow: 0 0 6px currentColor, 0 0 22px rgba(255, 174, 0, .4);
+}
+[data-theme='phosphor'] {
+  --neon: #39ff88; --cyan: #9dffc9; --acid: #39ff88; --accent: #39ff88; --accent2: #9dffc9;
+  --bg0: #000803; --bg1: #021007; --bg2: #03170b; --bg3: #052110;
+  --ink: #b8ffd4; --ink-dim: #4f9c72;
+  --line: rgba(57, 255, 136, .18); --line-hot: rgba(157, 255, 201, .4);
+  --glow: 0 0 6px currentColor, 0 0 22px rgba(57, 255, 136, .35);
+}
+[data-theme='ice'] {
+  --neon: #4cc9ff; --cyan: #a9e7ff; --acid: #7cf7ff; --accent: #4cc9ff; --accent2: #a9e7ff;
+  --bg0: #01060f; --bg1: #030c1b; --bg2: #051426; --bg3: #071e36;
+  --ink: #cfe9ff; --ink-dim: #6d8bab;
+  --line: rgba(76, 201, 255, .2); --line-hot: rgba(169, 231, 255, .42);
+  --glow: 0 0 6px currentColor, 0 0 22px rgba(76, 201, 255, .4);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg0);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.55;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Фон: сетка + горизонт + дождь ───────────────────────────────────────── */
+#bgfx { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+#bgfx canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bg-grad {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 108%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 62%),
+    radial-gradient(ellipse 60% 40% at 12% -8%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg0) 60%);
+}
+.bg-sun {
+  position: absolute; left: 50%; bottom: 8vh; width: 46vmin; height: 46vmin;
+  translate: -50% 0; border-radius: 50%;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--amber) 50%, var(--accent) 100%);
+  filter: blur(.4px); opacity: .17;
+  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 7px, transparent 7px 12px);
+  mask-image: repeating-linear-gradient(180deg, #000 0 7px, transparent 7px 12px);
+}
+
+/* ── CRT-оверлеи ─────────────────────────────────────────────────────────── */
+#crt { position: fixed; inset: 0; z-index: 900; pointer-events: none; }
+body[data-scan='on'] #crt::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+#crt::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 120% 105% at 50% 50%, transparent 55%, rgba(0,0,0,.72) 100%);
+}
+body[data-crt='off'] #crt { display: none; }
+.crt-roll {
+  position: absolute; left: 0; right: 0; height: 140px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,.045), transparent);
+  animation: roll 7.5s linear infinite;
+}
+@keyframes roll { from { top: -160px; } to { top: 100%; } }
+body[data-flicker='on'] #shell { animation: flick 7s infinite steps(1); }
+@keyframes flick {
+  0%, 97%, 100% { opacity: 1; }
+  97.5% { opacity: .82; }
+  98% { opacity: 1; }
+  98.4% { opacity: .9; }
+}
+body[data-motion='off'] * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+
+/* ── Скроллбары ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,.03); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border: 2px solid var(--bg0);
+}
+::selection { background: var(--accent); color: #07020c; }
+
+/* ── Типографика ─────────────────────────────────────────────────────────── */
+h1, h2, h3, h4 { font-family: var(--disp); font-weight: 700; letter-spacing: .06em; margin: 0; }
+a { color: var(--accent2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+p { margin: 0 0 .8em; }
+.p { color: var(--ink-dim); line-height: 1.7; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--ink-dim); }
+.hot { color: var(--accent); }
+.cool { color: var(--accent2); }
+.acid { color: var(--acid); }
+.warnc { color: var(--amber); }
+.badc { color: var(--blood); }
+.up { text-transform: uppercase; }
+.small { font-size: 12px; }
+.tiny { font-size: 11px; letter-spacing: .1em; }
+.center { text-align: center; }
+.nowrap { white-space: nowrap; }
+
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+}
+.glitch::before { color: var(--blood); clip-path: inset(0 0 62% 0); animation: gl1 3.4s infinite steps(2); }
+.glitch::after { color: var(--cyan); clip-path: inset(58% 0 0 0); animation: gl2 2.8s infinite steps(2); }
+@keyframes gl1 { 0%,92%,100% { transform: none; opacity: 0; } 93% { transform: translate(-2px,-1px); opacity: .85; } 96% { transform: translate(2px,1px); opacity: .6; } }
+@keyframes gl2 { 0%,88%,100% { transform: none; opacity: 0; } 89% { transform: translate(2px,1px); opacity: .8; } 94% { transform: translate(-3px,0); opacity: .5; } }
