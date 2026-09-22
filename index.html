@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВОЛЬТГРАД-88 // город, который не гаснет</title>
+<meta name="description" content="Городской терминал Волтграда-88. Лор, корпорации, районы, чёрный рынок, эфир, розыск. Свет — товар.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ BOOT SEQUENCE ============ -->
+<div id="boot" class="boot">
+  <div class="boot-inner">
+<pre class="boot-ascii">
+   ▄████▄  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+  ▒█████▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+  ▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+</pre>
+    <div id="boot-log" class="boot-log"></div>
+    <div class="boot-skip">
+      <span class="boot-skip-hint">нажмите <b>[ENTER]</b> или кнопку, чтобы перейти к эфиру</span>
+      <button id="boot-skip-btn" class="btn btn-cyan btn-sm">ПРОПУСТИТЬ ЗАГРУЗКУ_</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CRT OVERLAY ============ -->
+<div id="crt-scanlines" class="crt-scanlines" aria-hidden="true"></div>
+<div id="crt-vignette" class="crt-vignette" aria-hidden="true"></div>
+
+<!-- ============ MATRIX OVERLAY ============ -->
+<canvas id="matrix-canvas" class="matrix-canvas" aria-hidden="true"></canvas>
+
+<!-- ============ FINAL FLASH ============ -->
+<div id="white-flash" class="white-flash" aria-hidden="true">
+  <div class="white-flash-text">БЕЛЫЙ СИГНАЛ</div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="topbar" id="topbar">
+  <a class="logo" href="#home" data-tab="home" title="На главную">
+    <span class="logo-bolt">⚡</span>
+    <span class="logo-text glitch" data-text="ВОЛЬТГРАД">ВОЛЬТГРАД</span>
+    <span class="logo-year">-88</span>
+  </a>
+
+  <nav class="nav" id="nav" aria-label="Разделы"></nav>
+
+  <div class="topbar-status" id="topbar-status">
+    <div class="stat-mini" title="Время города (по сетке СИНТЕЗКОРП)">
+      <span class="stat-mini-label">СЕТКА</span>
+      <span class="stat-mini-value" id="city-clock">--:--:--</span>
+    </div>
+    <div class="stat-mini" title="Нагрузка эфира">
+      <span class="stat-mini-label">ЭФИР</span>
+      <span class="stat-mini-value" id="ether-load">--%</span>
+    </div>
+    <button class="icon-btn" id="btn-sound" title="Звук интерфейса">🔊</button>
+    <button class="icon-btn" id="btn-crt" title="CRT-режим (усилить сканлайны)">▦</button>
+  </div>
+</header>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<main id="main" class="main">
+
+  <!-- ================= ГЛАВНАЯ ================= -->
+  <section class="tab-panel" id="tab-home">
+    <div class="hero">
+      <div class="hero-bg" style="background-image:url('assets/img/hero.jpg')"></div>
+      <div class="hero-sun"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-content">
+        <div class="hero-kicker">СИСТЕМА ГОРОДСКОГО ТЕРМИНАЛА // КАНАЛ 9 // СВЕТ — ТОВАР</div>
+        <h1 class="hero-title glitch" data-text="ВОЛЬТГРАД">ВОЛЬТГРАД</h1>
+        <div class="hero-sub">
+          <span class="pixel">1988</span>
+          <span class="hero-tag">Город, который не гаснет. Пока.</span>
+        </div>
+        <p class="hero-desc">
+          Лето 1988 года. Волтград — крупнейший порт Северной воды: 2,1 миллиона человек
+          в собственности шести корпораций. С 1983-го свет здесь продают за ватт-час,
+          с 1987-го — после Тёмной недели — город живёт по законам неона.
+          Вы подключились к городскому терминалу. <b>Город заметил вас.</b>
+        </p>
+        <div class="hero-cta">
+          <button class="btn btn-mag" data-goto="tab-terminal">⌁ ОТКРЫТЬ ТЕРМИНАЛ</button>
+          <button class="btn btn-cyan" data-goto="tab-radio">♫ РАДИО ВОЛЬТ-ФМ 88.8</button>
+          <button class="btn btn-ghost" data-goto="tab-lore">📼 ЛОР ГОРОДА</button>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">▼ ЛИСТАЙ ИЛИ ВЫБИРАЙ ВКЛАДКУ ВЫШЕ</div>
+    </div>
+
+    <div class="container">
+      <div class="stats-row" id="home-stats"></div>
+
+      <div class="home-cols">
+        <div class="panel">
+          <div class="panel-head">
+            <h3 class="panel-title">// СЕГОДНЯ В ГОРОДЕ</h3>
+            <button class="linklike" data-goto="tab-news">все новости →</button>
+          </div>
+          <div id="home-news" class="home-news"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3 class="panel-title">// ГОРОД СМОТРИТ НА ВАС</h3>
+            <span class="panel-badge" id="home-profile-badge">ДОСЬЕ ПУСТО</span>
+          </div>
+          <div id="home-dossier" class="home-dossier"></div>
+        </div>
+      </div>
+
+      <div class="panel ascii-panel">
+<pre id="home-ascii" class="ascii-art">
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  ВОЛЬТ-OS 8.8.8   ·   СИНТЕЗКОРП (c) 1988                   ║
+    ║                                                              ║
+    ║   "Свет — товар. Память — товар. Сон — товар."               ║
+    ║        ── устав города, статья 1                             ║
+    ║                                                              ║
+    ║   13 разделов   ·   6 корпораций   ·   6 районов             ║
+    ║   эфир активен  ·   счётчик не остановлен                    ║
+    ╚══════════════════════════════════════════════════════════════╝
+</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ЛОР ================= -->
+  <section class="tab-panel hidden" id="tab-lore">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ХРОНИКА ГОРОДА">ХРОНИКА ГОРОДА</h2>
+        <p class="sec-intro" data-intro="Семнадцать лет за семьдесят семь. Летопись волтградского неона — от первых кранов до Белого сигнала."></p>
+      </div>
+
+      <div class="panel lore-intro-panel">
+        <p>
+          Летопись составлена на основе открытых эфирных архивов «ЧЁРНОГО ЯЩИКА»,
+          передач «РАДИА-МЕДИА» и устных показаний уличных шаманов. СИНТЕЗКОРП
+          оставляет за собой право «корректировать свет» в тексте.
+        </p>
+      </div>
+
+      <div class="timeline" id="lore-timeline"></div>
+
+      <div class="sec-head" style="margin-top:2.5rem">
+        <h2 class="sec-title" style="font-size:1.5rem">// СЕКРЕТНЫЕ ДОКУМЕНТЫ</h2>
+        <p class="sec-intro dim">Найдены в эфире в зашифрованном виде. Расшифровка может быть отмечена сетью.</p>
+      </div>
+      <div class="docs-grid" id="lore-docs"></div>
+    </div>
+  </section>
+
+  <!-- ================= КОРПОРАЦИИ ================= -->
+  <section class="tab-panel hidden" id="tab-corps">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="РЕЕСТР КОРПОРАЦИЙ">РЕЕСТР КОРПОРАЦИЙ</h2>
+        <p class="sec-intro" data-intro="Шесть владельцев Волтграда. Официальные данные. Официальное беспокойство."></p>
+      </div>
+      <div class="corps-grid" id="corps-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= РАЙОНЫ ================= -->
+  <section class="tab-panel hidden" id="tab-districts">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="КАРТА РАЙОНОВ">КАРТА РАЙОНОВ</h2>
+        <p class="sec-intro" data-intro="Шесть районов — шесть оттенков неона. Нажмите на сектор, чтобы подключить его камеру."></p>
+      </div>
+
+      <div class="districts-layout">
+        <div class="panel map-panel">
+          <div class="panel-head"><h3 class="panel-title">// СЕТКА ВОЛЬТГРАДА · СЕКТОР 9</h3>
+            <span class="panel-badge live-dot">КАМЕРЫ: 4/6</span></div>
+          <svg id="city-map" viewBox="0 0 760 480" class="city-map" role="img" aria-label="Стилизованная карта Волтграда"></svg>
+          <div class="map-legend" id="map-legend"></div>
+        </div>
+        <div class="panel district-info" id="district-info"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= НОВОСТИ ================= -->
+  <section class="tab-panel hidden" id="tab-news">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ЭФИР: ГОРОДСКАЯ РЕДАКЦИЯ">ЭФИР: ГОРОДСКАЯ РЕДАКЦИЯ</h2>
+        <p class="sec-intro" data-intro="Поток «РАДИА-МЕДИА», канал 3. Цензурные фильтры СИНТЕЗКОРП работают исправно. Почти."></p>
+      </div>
+      <div class="news-toolbar">
+        <input type="search" id="news-filter" class="input" placeholder="поиск по эфиру… (например: рассвет)">
+        <div class="news-tags" id="news-tags"></div>
+      </div>
+      <div class="news-feed" id="news-feed"></div>
+    </div>
+  </section>
+
+  <!-- ================= РЫНОК ================= -->
+  <section class="tab-panel hidden" id="tab-market">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ЧЁРНЫЙ РЫНОК">ЧЁРНЫЙ РЫНОК</h2>
+        <p class="sec-intro" data-intro="Базарная улица, подвал 7. Оплата только кредитами. Возвратов не бывает."></p>
+      </div>
+
+      <div class="market-layout">
+        <div class="market-items" id="market-items"></div>
+        <div class="market-side">
+          <div class="panel">
+            <div class="panel-head">
+              <h3 class="panel-title">// ВАШ СЧЁТ</h3>
+              <span class="credits-badge" id="credits-display">0 КР</span>
+            </div>
+            <div class="cart" id="cart"></div>
+            <div class="cart-total"><span>ИТОГО:</span><b id="cart-total">0 КР</b></div>
+            <button class="btn btn-mag btn-block" id="btn-buy">ОПЛАТИТЬ И ЗАБРАТЬ</button>
+            <p class="dim small">Торговец не задаёт вопросов. Счёт задаёт вопросы.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3 class="panel-title">// ИНВЕНТАРЬ</h3>
+              <span class="panel-badge" id="inv-count">0 поз.</span></div>
+            <div class="inventory" id="inventory"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ТЕРМИНАЛ ================= -->
+  <section class="tab-panel hidden" id="tab-terminal">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ТЕРМИНАЛ ВОЛЬТ-OS">ТЕРМИНАЛ ВОЛЬТ-OS</h2>
+        <p class="sec-intro" data-intro="Прямая линия к городской сети. Введите help, если потерялись. Сеть не потеряется."></p>
+      </div>
+      <div class="panel terminal-panel">
+        <div class="term-head">
+          <span class="term-dot red"></span><span class="term-dot yellow"></span><span class="term-dot green"></span>
+          <span class="term-title">volto-ssh — волтград.сектор-9 — [засекречено]</span>
+        </div>
+        <div class="term-body" id="term-body"></div>
+        <div class="term-input-line">
+          <span class="term-prompt" id="term-prompt">волт@9:~$</span>
+          <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" aria-label="Ввод команды терминала">
+        </div>
+        <div class="term-hint">help · ls · cat · whoami · credits · news · scan · hack · matrix · secret · clear</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= РАДИО ================= -->
+  <section class="tab-panel hidden" id="tab-radio">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="РАДИО ВОЛЬТ-ФМ">РАДИО ВОЛЬТ-ФМ</h2>
+        <p class="sec-intro" data-intro="Частота 88.8. Синтез прямого действия, генерируется сетью в реальном времени. Катушек нет — катушки не нужны."></p>
+      </div>
+
+      <div class="radio-layout">
+        <div class="panel radio-deck">
+          <div class="radio-screen">
+            <div class="radio-freq"><span id="radio-freq">88.8</span> FM · ВОЛЬТГРАД</div>
+            <div class="radio-now" id="radio-now">ВЫБОР ПЕРЕДАЧИ…</div>
+            <canvas id="vu-canvas" class="vu-canvas" width="560" height="90"></canvas>
+            <div class="radio-tape" id="radio-tape"><div class="radio-tape-progress" id="radio-tape-progress"></div></div>
+          </div>
+          <div class="radio-controls">
+            <button class="icon-btn big" id="btn-radio-prev" title="Предыдущая">⏮</button>
+            <button class="icon-btn big btn-play" id="btn-radio-play" title="Воспроизвести">▶</button>
+            <button class="icon-btn big" id="btn-radio-next" title="Следующая">⏭</button>
+            <div class="radio-vol">
+              <span>ГРОМКОСТЬ</span>
+              <input type="range" id="radio-vol" min="0" max="100" value="70">
+            </div>
+          </div>
+          <p class="dim small">* Передачи синтезируются модулями Web-Audio внутри вашего терминала. В эфир не выходят. Наверное.</p>
+        </div>
+
+        <div class="panel radio-playlist">
+          <div class="panel-head"><h3 class="panel-title">// ПЛЕЙЛИСТ НОЧИ</h3>
+            <span class="panel-badge" id="radio-count"></span></div>
+          <div id="radio-tracks" class="radio-tracks"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ДОСЬЕ ================= -->
+  <section class="tab-panel hidden" id="tab-dossier">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ВАШЕ ДОСЬЕ">ВАШЕ ДОСЬЕ</h2>
+        <p class="sec-intro" data-intro="Сеть хочет знать, кто в неё заходит. Синхронизируйте досье — и город начнёт вас видеть."></p>
+      </div>
+
+      <div class="dossier-layout">
+        <div class="panel">
+          <div class="panel-head"><h3 class="panel-title">// ЗАСЕЛЕНИЕ В СЕТЬ</h3></div>
+          <label class="field-label" for="dossier-name">ПОЗЫВНОЙ</label>
+          <input type="text" id="dossier-name" class="input" maxlength="16" placeholder="например: ШОФЁР" value="НЕТ-ИМЕНИ">
+          <label class="field-label" style="margin-top:1rem">КЛАСС</label>
+          <div class="class-grid" id="class-grid"></div>
+          <button class="btn btn-mag btn-block" id="btn-sync" style="margin-top:1.25rem">⚡ СИНХРОНИЗИРОВАТЬ ДОСЬЕ</button>
+          <p class="dim small">После синхронизации позывной появится в шапке, а терминал узнает вас по whoami.</p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3 class="panel-title">// ПАРАМЕТРЫ</h3>
+            <span class="panel-badge" id="dossier-status">НЕ СИНХРОНИЗИРОВАНО</span>
+          </div>
+          <div id="dossier-stats" class="dossier-stats"></div>
+          <div class="dossier-note" id="dossier-note">
+            Сеть ждёт. Сеть всегда ждёт.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= РОЗЫСК ================= -->
+  <section class="tab-panel hidden" id="tab-wanted">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="РОЗЫСК">РОЗЫСК</h2>
+        <p class="sec-intro" data-intro="Доска БОРЭАЛЬ-ПОРТ и городского совета. Сообщения можно направлять анонимно. Анонимность не гарантируется."></p>
+      </div>
+      <div class="wanted-grid" id="wanted-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= ГЛОССАРИЙ ================= -->
+  <section class="tab-panel hidden" id="tab-glossary">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="ГЛОССАРИЙ ЭФИРА">ГЛОССАРИЙ ЭФИРА</h2>
+        <p class="sec-intro" data-intro="Словарь городского жаргона. Если слова здесь нет — оно опаснее, чем кажется."></p>
+      </div>
+      <div class="news-toolbar">
+        <input type="search" id="glossary-filter" class="input" placeholder="поиск термина… (например: лед)">
+        <span class="dim" id="glossary-count"></span>
+      </div>
+      <div class="glossary-list" id="glossary-list"></div>
+    </div>
+  </section>
+
+  <!-- ================= СЕКРЕТЫ ================= -->
+  <section class="tab-panel hidden" id="tab-secrets">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="КОДЕКС СЕКРЕТОВ">КОДЕКС СЕКРЕТОВ</h2>
+        <p class="sec-intro" data-intro="Город хранит следы. Соберите их все — и город покажет, что он прячет в темноте между счетчиками."></p>
+      </div>
+      <div class="panel">
+        <div class="secrets-progress">
+          <span class="dim">СЛЕДЫ:</span>
+          <div class="progress-bar"><div class="progress-fill" id="secrets-fill"></div></div>
+          <span id="secrets-count" class="pixel small">0/7</span>
+        </div>
+      </div>
+      <div class="secrets-grid" id="secrets-grid"></div>
+      <div class="panel secrets-final hidden" id="secrets-final">
+        <div class="panel-head"><h3 class="panel-title" style="color:var(--mag)">// БЕЛЫЙ СИГНАЛ // ИСТИНА</h3></div>
+        <div id="secrets-final-text" class="final-text"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= СИСТЕМА ================= -->
+  <section class="tab-panel hidden" id="tab-system">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title glitch" data-text="О СИСТЕМЕ">О СИСТЕМЕ</h2>
+        <p class="sec-intro" data-intro="Технический паспорт терминала. Служебная информация. Почти официальная."></p>
+      </div>
+      <div class="system-grid">
+        <div class="panel">
+          <div class="panel-head"><h3 class="panel-title">// ПАРАМЕТРЫ</h3></div>
+          <table class="sys-table">
+            <tr><td>Система</td><td>ВОЛЬТ-OS 8.8.8 (сборка «Тёмная неделя»)</td></tr>
+            <tr><td>Город</td><td>Волтград, сектор 9, Северная вода</td></tr>
+            <tr><td>Год в сетке</td><td>1988</td></tr>
+            <tr><td>Разделов</td><td>13</td></tr>
+            <tr><td>Корпораций</td><td>6</td></tr>
+            <tr><td>Районов</td><td>6</td></tr>
+            <tr><td>Розыскных</td><td>4</td></tr>
+            <tr><td>Секретов</td><td>7 (найдите все)</td></tr>
+            <tr><td>Аудио</td><td>Web-Audio, синтез прямого действия</td></tr>
+            <tr><td>Хранилище</td><td>localStorage («память» вашего терминала)</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3 class="panel-title">// ЧТО УМЕТЭТ ЭТОТ ТЕРМИНАЛ</h3></div>
+          <ul class="sys-features">
+            <li>⌁ Интерактивный терминал с командами <code>hack</code>, <code>scan</code> и <code>matrix</code></li>
+            <li>♫ Радио: четыре синтвейв-передачи, генерируемые прямо в браузере</li>
+            <li>🛒 Чёрный рынок: кредиты, корзина, инвентарь — всё сохраняется</li>
+            <li>📼 Расшифровка секретных документов</li>
+            <li>🗺 Карта районов с «камерами»</li>
+            <li>🕵 Розыск, эфир, глоссарий с поиском</li>
+            <li>🔐 7 секретов города, включая старинный код нажатий</li>
+            <li>▦ CRT-режим, матрица, звуковые эффекты интерфейса</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3 class="panel-title">// ДИСКЛЕЙМЕР</h3></div>
+          <p class="dim">
+            Волтград, СИНТЕЗКОРП, Тёмная неделя и все лица на доске розыска — вымысел.
+            Координаты: 21°18′ с.ш. 69°04′ в.д. — проверять не рекомендуется.
+            Проект: «Удиви меня», 1988 / 2026. Сделано в эфире, за свет.
+          </p>
+          <p class="dim small">
+            Подсказка: на клавиатуре есть старый код. Он старше интернета.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>⚡ СИНТЕЗКОРП (c) 1988</span>
+    <span class="dim">·</span>
+    <span>Свет — товар.</span>
+    <span class="dim">·</span>
+    <span>Не забудьте оплатить счётчик.</span>
+    <span class="dim">·</span>
+    <span class="pixel small">ВОЛЬТ-OS 8.8.8</span>
+  </div>
+</footer>
+
+<!-- ============ TOASTS ============ -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="js/data.js"></script>
+<script src="js/sfx.js"></script>
+<script src="js/radio.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
